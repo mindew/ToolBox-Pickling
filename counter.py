@@ -30,11 +30,35 @@ def update_counter(file_name, reset=False):
     >>> update_counter('blah2.txt')
     2
     """
-    pass
+    if exists(file_name) and not reset:
+        f = open(file_name, 'rb+')
+        # open the counter file in rb+ if it exists
+        # and not resetting the counter
+        # r = reading
+        # b = binary
+        # rb+ binary file in read or write mode
+        counter = load(f)
+        counter += 1
+        # increments
+        dump(counter, open(file_name, 'wb'))
+        f.close()
+        # store the file as text and dump the data
+        # so making it not load whenever function runs
+        # this generates the permanent text file
+    else:
+        f = open(file_name, 'wb')
+        # wb(writing) mode otherwises
+        counter = 1
+        dump(counter, f)
+        f.close()
+
+    reloaded_copy_of_texts = load(open(file_name, 'rb'))
+    return(reloaded_copy_of_texts)
+
 
 if __name__ == '__main__':
     if len(sys.argv) < 2:
         import doctest
-        doctest.testmod()
+        doctest.testmod(verbose=True)
     else:
         print("new value is " + str(update_counter(sys.argv[1])))
